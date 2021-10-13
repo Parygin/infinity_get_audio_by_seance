@@ -49,7 +49,10 @@ def processing_lines_of_the_file():
                 )
                 connection = get_connection_by_seance(seance)
                 title = f'{FOLDER}/{phone}.wav'
-                get_recorded_file_by_connection(connection, title)
+                if len(connection) == 2:
+                    get_recorded_file_by_connection(connection[1], title)
+                else:
+                    get_recorded_file_by_connection(connection[0], title)
                 logging_and_print_debug_message(
                     f'{seance} -> {phone} полностью обработан'
                 )
@@ -70,7 +73,7 @@ def get_connection_by_seance(seance):
             params=params
         )
         logging.debug(f'Connection для {seance} получен')
-        return connection.json()['result']['Connections'][0]
+        return connection.json()['result']['Connections']
     except ConnectionError as e:
         message = f'Не удалось получить connection для seance={seance}. {e}'
         logging_and_print_error_message(message)
